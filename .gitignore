@@ -38,4 +38,7 @@ web/coverage/
 tes-memos.exe
 ERROR.md
 
+# Tauri build artifacts
+src-tauri/target/
+
 
