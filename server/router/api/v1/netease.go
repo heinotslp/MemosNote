@@ -74,7 +74,7 @@ func rsaEncrypt(text []byte, modulusHex string, exponentHex string) (string, err
 	return fmt.Sprintf("%0256x", c), nil
 }
 
-// encryptWeapi signs parameters with NetEase Weapi AES+RSA encryption
+// encryptWeapi signs parameters with NetEase Weapi AES+RSA encryption.
 func encryptWeapi(text []byte) (string, string, error) {
 	// Generate random 16-character key
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -105,7 +105,7 @@ func encryptWeapi(text []byte) (string, string, error) {
 	return params, encSecKey, nil
 }
 
-// neteasePost sends encrypted request to NetEase Cloud Music server
+// neteasePost sends encrypted request to NetEase Cloud Music server.
 func neteasePost(endpoint string, jsonPayload string, cookie string) ([]byte, []string, error) {
 	params, encSecKey, err := encryptWeapi([]byte(jsonPayload))
 	if err != nil {
@@ -150,7 +150,7 @@ func neteasePost(endpoint string, jsonPayload string, cookie string) ([]byte, []
 	return body, cookies, nil
 }
 
-// RegisterNeteaseRoutes registers NetEase proxy endpoints
+// RegisterNeteaseRoutes registers NetEase proxy endpoints.
 func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secret string) {
 	authenticator := auth.NewAuthenticator(storeInstance, secret)
 
