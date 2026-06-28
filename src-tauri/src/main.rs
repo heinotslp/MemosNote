@@ -65,10 +65,9 @@ fn main() {
       
       // Let's format local server URL
       let local_url = format!("http://localhost:{}", port);
-      let url = tauri::WindowUrl::App(local_url.parse().unwrap());
       
       // Navigate main window to the resolved local port
-      let _ = main_window.navigate(url);
+      let _ = main_window.eval(&format!("window.location.replace('{}')", local_url));
       
       Ok(())
     })
