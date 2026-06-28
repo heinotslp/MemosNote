@@ -40,11 +40,9 @@ jobs:
           cd web
           pnpm install
           pnpm build
-      - name: Install Tauri CLI
-        run: pnpm install --global @tauri-apps/cli
       - name: Build Tauri Desktop Client
         run: |
-          pnpm tauri build
+          pnpm dlx @tauri-apps/cli@1 build
       # 3. 将生成物作为 Artifact 保存供您下载
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
