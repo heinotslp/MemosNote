@@ -1,12 +1,13 @@
 import defaultDarkThemeContent from "../themes/default-dark.css?raw";
 import everforestDarkThemeContent from "../themes/everforest-dark.css?raw";
+import everforestLightThemeContent from "../themes/everforest-light.css?raw";
 import paperThemeContent from "../themes/paper.css?raw";
 
 // ============================================================================
 // Types and Constants
 // ============================================================================
 
-const VALID_THEMES = ["system", "default", "default-dark", "paper", "everforest-dark"] as const;
+const VALID_THEMES = ["system", "default", "default-dark", "paper", "everforest-dark", "everforest-light"] as const;
 
 export type Theme = (typeof VALID_THEMES)[number];
 export type ResolvedTheme = Exclude<Theme, "system">;
@@ -24,6 +25,7 @@ const THEME_CONTENT: Record<ResolvedTheme, string | null> = {
   "default-dark": defaultDarkThemeContent,
   paper: paperThemeContent,
   "everforest-dark": everforestDarkThemeContent,
+  "everforest-light": everforestLightThemeContent,
 };
 
 const THEME_COLORS: Record<ResolvedTheme, string> = {
@@ -31,6 +33,7 @@ const THEME_COLORS: Record<ResolvedTheme, string> = {
   "default-dark": "#1d1f23",
   paper: "#f5ede4",
   "everforest-dark": "#2b3339",
+  "everforest-light": "#fdf6e3",
 };
 
 export const THEME_OPTIONS: ThemeOption[] = [
@@ -39,6 +42,7 @@ export const THEME_OPTIONS: ThemeOption[] = [
   { value: "default-dark", label: "Dark" },
   { value: "paper", label: "Paper" },
   { value: "everforest-dark", label: "Everforest Dark" },
+  { value: "everforest-light", label: "Everforest Light" },
 ];
 
 // ============================================================================

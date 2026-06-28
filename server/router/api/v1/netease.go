@@ -13,6 +13,8 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -161,6 +163,8 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 			if result == nil {
 				return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
 			}
+			ctx := auth.ApplyToContext(c.Request().Context(), result)
+			c.SetRequest(c.Request().WithContext(ctx))
 			return next(c)
 		}
 	}
@@ -199,6 +203,13 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 				newBody, err := json.Marshal(result)
 				if err == nil {
 					body = newBody
+				}
+
+				// Save NetEase cookie to Memos user data directory
+				userID := auth.GetUserID(c.Request().Context())
+				if userID != 0 {
+					cookiePath := filepath.Join(storeInstance.GetDataDir(), fmt.Sprintf("netease_cookie_%d.txt", userID))
+					_ = os.WriteFile(cookiePath, []byte(cookieStr), 0600)
 				}
 			}
 		}
@@ -290,5 +301,33 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		}
 		return c.Blob(http.StatusOK, "application/json", body)
+	})
+
+	// 6. Get stored cookie
+	g.GET("/cookie", func(c *echo.Context) error {
+		userID := auth.GetUserID(c.Request().Context())
+		if userID == 0 {
+			return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+		}
+
+		cookiePath := filepath.Join(storeInstance.GetDataDir(), fmt.Sprintf("netease_cookie_%d.txt", userID))
+		cookieBytes, err := os.ReadFile(cookiePath)
+		if err != nil {
+			return c.JSON(http.StatusOK, map[string]string{"cookie": ""})
+		}
+
+		return c.JSON(http.StatusOK, map[string]string{"cookie": string(cookieBytes)})
+	})
+
+	// 7. Logout / delete stored cookie
+	g.POST("/logout", func(c *echo.Context) error {
+		userID := auth.GetUserID(c.Request().Context())
+		if userID == 0 {
+			return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Unauthorized"})
+		}
+
+		cookiePath := filepath.Join(storeInstance.GetDataDir(), fmt.Sprintf("netease_cookie_%d.txt", userID))
+		_ = os.Remove(cookiePath)
+		return c.JSON(http.StatusOK, map[string]string{"status": "success"})
 	})
 }

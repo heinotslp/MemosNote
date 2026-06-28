@@ -86,27 +86,46 @@ const EmbeddedMusicPlayer = () => {
 
   // Load player state on mount
   useEffect(() => {
-    try {
-      // Restore NetEase Cookie
-      const savedCookie = localStorage.getItem("memos_netease_cookie");
-      if (savedCookie) {
-        setNeteaseCookie(savedCookie);
-        loadNeteasePlaylists(savedCookie);
-      }
+    const initPlayer = async () => {
+      try {
+        // 1. Fetch cookie from server first (survives dynamic port / container restart)
+        let cookie = "";
+        try {
+          const res = await fetchNetease("/api/v1/netease/cookie");
+          if (res.cookie) {
+            cookie = res.cookie;
+            localStorage.setItem("memos_netease_cookie", cookie);
+          }
+        } catch (err) {
+          console.warn("Failed to fetch NetEase cookie from server", err);
+        }
 
-      // Restore Player State
-      const savedPlayerState = localStorage.getItem("memos_player_state");
-      if (savedPlayerState) {
-        const state = JSON.parse(savedPlayerState);
-        if (state.playlist) setPlaylist(state.playlist);
-        if (state.currentTrackIndex !== undefined) setCurrentTrackIndex(state.currentTrackIndex);
-        if (state.volume !== undefined) setVolume(state.volume);
-        if (state.isMuted !== undefined) setIsMuted(state.isMuted);
-        if (state.playMode) setPlayMode(state.playMode);
+        // 2. Fallback to localStorage if server didn't return one
+        if (!cookie) {
+          cookie = localStorage.getItem("memos_netease_cookie") || "";
+        }
+
+        if (cookie) {
+          setNeteaseCookie(cookie);
+          loadNeteasePlaylists(cookie);
+        }
+
+        // Restore Player State
+        const savedPlayerState = localStorage.getItem("memos_player_state");
+        if (savedPlayerState) {
+          const state = JSON.parse(savedPlayerState);
+          if (state.playlist) setPlaylist(state.playlist);
+          if (state.currentTrackIndex !== undefined) setCurrentTrackIndex(state.currentTrackIndex);
+          if (state.volume !== undefined) setVolume(state.volume);
+          if (state.isMuted !== undefined) setIsMuted(state.isMuted);
+          if (state.playMode) setPlayMode(state.playMode);
+        }
+      } catch (e) {
+        console.error("Failed to load saved player state", e);
       }
-    } catch (e) {
-      console.error("Failed to load saved player state", e);
-    }
+    };
+
+    initPlayer();
   }, []);
 
   // Save player state to localStorage when it changes
@@ -122,13 +141,13 @@ const EmbeddedMusicPlayer = () => {
   }, [playlist, currentTrackIndex, volume, isMuted, playMode]);
 
   // Fetch utility for NetEase API proxy
-  const fetchNetease = async (path: string) => {
+  const fetchNetease = async (path: string, options?: RequestInit) => {
     const token = getAccessToken();
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = (options?.headers as Record<string, string>) || {};
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
-    const res = await fetch(path, { headers });
+    const res = await fetch(path, { ...options, headers });
     if (!res.ok) {
       if (res.status === 401) {
         try {
@@ -245,6 +264,9 @@ const EmbeddedMusicPlayer = () => {
     setIsPlaying(false);
     setResolvedUrl("");
     localStorage.removeItem("memos_netease_cookie");
+    fetchNetease("/api/v1/netease/logout", { method: "POST" }).catch((err) => {
+      console.warn("Failed to notify server of logout", err);
+    });
   };
 
   const handleSessionExpired = () => {
@@ -572,10 +594,13 @@ const EmbeddedMusicPlayer = () => {
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center text-[10px]">
               <span className="text-muted-foreground font-semibold flex items-center gap-1">
-                <MusicIcon className="w-3 h-3 text-red-500" />
+                <MusicIcon className="w-3 h-3 text-primary" />
                 NetEase Cloud
               </span>
-              <button className="text-red-500 hover:underline" onClick={handleLogoutNetease}>
+              <button
+                className="text-muted-foreground hover:text-primary transition-colors flex items-center"
+                onClick={handleLogoutNetease}
+              >
                 <LogOutIcon className="w-3 h-3 inline mr-0.5" />
                 Logout
               </button>

@@ -1,1 +1,1 @@
-type Theme = "system" | "default" | "default-dark" | "paper" | "everforest-dark";
+type Theme = "system" | "default" | "default-dark" | "paper" | "everforest-dark" | "everforest-light";

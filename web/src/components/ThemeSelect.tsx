@@ -16,6 +16,7 @@ const THEME_ICONS: Record<string, ReactElement> = {
   "default-dark": <Moon className="w-4 h-4" />,
   paper: <Palette className="w-4 h-4" />,
   "everforest-dark": <Leaf className="w-4 h-4" />,
+  "everforest-light": <Leaf className="w-4 h-4 text-emerald-500" />,
 };
 
 const ThemeSelect = ({ value, onValueChange, className, compact = false }: ThemeSelectProps = {}) => {

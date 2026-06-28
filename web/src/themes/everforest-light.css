@@ -1,0 +1,48 @@
+:root {
+  /* Everforest Light Theme - Warm & Comfortable Off-White */
+  --background: oklch(0.967 0.016 84); /* #fdf6e3 */
+  --foreground: oklch(0.485 0.017 142); /* #5c6a72 */
+
+  --card: oklch(0.947 0.021 84); /* #f8f0dc (Hard) */
+  --card-foreground: oklch(0.485 0.017 142);
+
+  --popover: oklch(0.927 0.025 84); /* #f4ebd5 (Soft) */
+  --popover-foreground: oklch(0.485 0.017 142);
+
+  /* Primary (Blue/Aqua - #3a94c5) */
+  --primary: oklch(0.59 0.11 200);
+  --primary-foreground: oklch(0.967 0.016 84);
+
+  /* Secondary (#e5dfc5) */
+  --secondary: oklch(0.887 0.022 84);
+  --secondary-foreground: oklch(0.485 0.017 142);
+
+  /* Muted (#f4ebd5) */
+  --muted: oklch(0.927 0.025 84);
+  --muted-foreground: oklch(0.655 0.012 142); /* #939f91 */
+
+  /* Accent (#e5dfc5) */
+  --accent: oklch(0.887 0.022 84);
+  --accent-foreground: oklch(0.485 0.017 142);
+
+  /* Destructive (Red - #e6686b) */
+  --destructive: oklch(0.60 0.15 19);
+  --destructive-foreground: oklch(0.98 0.004 255);
+
+  /* Feedback - Success (Green - #8da101) and Warning (Yellow - #dfa000) */
+  --success: oklch(0.66 0.13 115);
+  --success-foreground: oklch(0.967 0.016 84);
+  --warning: oklch(0.70 0.14 75);
+  --warning-foreground: oklch(0.967 0.016 84);
+
+  /* Borders (#e8e0cc) */
+  --border: oklch(0.90 0.015 84);
+  --input: oklch(0.90 0.015 84);
+  --ring: oklch(0.59 0.11 200);
+
+  /* Sidebar (#f8f0dc) */
+  --sidebar: oklch(0.947 0.021 84);
+  --sidebar-foreground: oklch(0.485 0.017 142);
+  --sidebar-accent: oklch(0.887 0.022 84);
+  --sidebar-accent-foreground: oklch(0.485 0.017 142);
+}

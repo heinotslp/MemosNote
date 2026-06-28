@@ -20,15 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check release token
+        id: check-token
         env:
           RELEASE_PLEASE_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
         run: |
           if [ -z "$RELEASE_PLEASE_TOKEN" ]; then
-            echo "RELEASE_PLEASE_TOKEN must be set to a fine-grained PAT so release-please tags can trigger release.yml." >&2
-            exit 1
+            echo "RELEASE_PLEASE_TOKEN is not set. Skipping release-please execution."
+            echo "has_token=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_token=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Run release-please
+        if: steps.check-token.outputs.has_token == 'true'
         uses: googleapis/release-please-action@v4
         with:
           # Use a fine-grained PAT so generated tags trigger release.yml.

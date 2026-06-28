@@ -37,6 +37,7 @@ web/coverage/
 *.ps1
 tes-memos.exe
 ERROR.md
+*.exe
 
 # Tauri build artifacts
 src-tauri/target/
