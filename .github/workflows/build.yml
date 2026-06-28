@@ -26,20 +26,21 @@ jobs:
         with:
           version: 11.0.1
 
-      # 1. 编译 Go 后端边车可执行程序
+      # 1. 编译并打包前端
+      - name: Install dependencies and Build frontend
+        run: |
+          cd web
+          pnpm install
+          pnpm release
+          pnpm build
+
+      # 2. 编译 Go 后端边车可执行程序
       - name: Build Go Sidecar
         shell: pwsh
         run: |
           mkdir src-tauri/bin -Force
           # 注意：Github Action 运行在 64位 Windows 上，所以 Target 是 x86_64-pc-windows-msvc
           go build -o src-tauri/bin/memos-backend-x86_64-pc-windows-msvc.exe ./cmd/memos
-
-      # 2. 编译并打包 Tauri
-      - name: Install dependencies and Build frontend
-        run: |
-          cd web
-          pnpm install
-          pnpm build
       - name: Build Tauri Desktop Client
         run: |
           pnpm dlx @tauri-apps/cli@1 build
