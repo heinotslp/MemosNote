@@ -48,4 +48,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MemosNote-Windows
-          path: src-tauri/target/release/bundle/msi/*.msi # 或者是编译出的 exe 安装包
+          path: src-tauri/target/release/bundle/**

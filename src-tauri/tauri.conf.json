@@ -17,7 +17,9 @@
       "active": true,
       "targets": "all",
       "identifier": "com.usememos.desktop",
-      "icon": [],
+      "icon": [
+        "icons/icon.ico"
+      ],
       "externalBin": [
         "bin/memos-backend"
       ]
