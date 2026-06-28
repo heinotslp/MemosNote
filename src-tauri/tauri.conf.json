@@ -1,0 +1,39 @@
+{
+  "build": {
+    "distDir": "../web/dist",
+    "devPath": "http://localhost:3001",
+    "beforeDevCommand": "",
+    "beforeBuildCommand": ""
+  },
+  "package": {
+    "productName": "MemosNote",
+    "version": "0.1.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": true
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.usememos.desktop",
+      "icon": [],
+      "externalBin": [
+        "bin/memos-backend"
+      ]
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "title": "MemosNote",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "label": "main"
+      }
+    ]
+  }
+}

@@ -46,16 +46,16 @@ const RootLayout = () => {
   }, [pathname, searchParams, removeFilter]);
 
   return (
-    <div className="w-full min-h-full flex flex-row justify-center items-start sm:pl-16">
+    <div className="w-full min-h-full flex flex-row justify-center items-start sm:pl-64">
       {sm && (
         <div
           className={cn(
             "group flex flex-col justify-start items-start fixed top-0 left-0 select-none h-full bg-sidebar",
-            "w-16 px-2",
+            "w-64 px-4",
             "border-r border-border",
           )}
         >
-          <Navigation className="py-4 md:pt-6" collapsed={true} />
+          <Navigation className="py-4 md:pt-6" collapsed={false} />
         </div>
       )}
       <main className="w-full h-auto grow shrink flex flex-col justify-start items-center">

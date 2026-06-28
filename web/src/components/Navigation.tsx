@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Routes } from "@/router";
 import { UserNotification_Status } from "@/types/proto/api/v1/user_service_pb";
 import { useTranslate } from "@/utils/i18n";
+import EmbeddedMusicPlayer from "./EmbeddedMusicPlayer";
 import MemosLogo from "./MemosLogo";
 import UserMenu from "./UserMenu";
 
@@ -123,8 +124,11 @@ const Navigation = (props: Props) => {
         </TooltipProvider>
       </div>
       {currentUser && (
-        <div className={cn("w-full flex flex-col justify-end", props.collapsed ? "items-center" : "items-start pl-3")}>
-          <UserMenu collapsed={collapsed} />
+        <div className="w-full mt-auto flex flex-col gap-4">
+          {!props.collapsed && <EmbeddedMusicPlayer />}
+          <div className={cn("w-full flex flex-col justify-end", props.collapsed ? "items-center" : "items-start pl-3")}>
+            <UserMenu collapsed={collapsed} />
+          </div>
         </div>
       )}
     </header>

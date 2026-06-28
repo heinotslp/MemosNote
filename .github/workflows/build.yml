@@ -1,0 +1,53 @@
+name: Build Desktop App
+on:
+  push:
+    branches: [ main ]
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest] # 我们只编译 Windows，也可以加上 macos-latest, ubuntu-22.04
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.2'
+      - name: install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11.0.1
+
+      # 1. 编译 Go 后端边车可执行程序
+      - name: Build Go Sidecar
+        shell: pwsh
+        run: |
+          mkdir src-tauri/bin -Force
+          # 注意：Github Action 运行在 64位 Windows 上，所以 Target 是 x86_64-pc-windows-msvc
+          go build -o src-tauri/bin/memos-backend-x86_64-pc-windows-msvc.exe ./cmd/memos
+
+      # 2. 编译并打包 Tauri
+      - name: Install dependencies and Build frontend
+        run: |
+          cd web
+          pnpm install
+          pnpm build
+      - name: Install Tauri CLI
+        run: pnpm install --global @tauri-apps/cli
+      - name: Build Tauri Desktop Client
+        run: |
+          pnpm tauri build
+      # 3. 将生成物作为 Artifact 保存供您下载
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MemosNote-Windows
+          path: src-tauri/target/release/bundle/msi/*.msi # 或者是编译出的 exe 安装包
