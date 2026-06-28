@@ -36,5 +36,6 @@ web/coverage/
 .devenv/
 *.ps1
 tes-memos.exe
+ERROR.md
 
 

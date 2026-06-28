@@ -17,6 +17,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v5"
+
 	"github.com/usememos/memos/server/auth"
 	"github.com/usememos/memos/store"
 )
@@ -28,14 +29,14 @@ const (
 	neteaseExponent  = "010001"
 )
 
-// pkcs7Padding pads data to aes block size
+// pkcs7Padding pads data to aes block size.
 func pkcs7Padding(src []byte, blockSize int) []byte {
 	padding := blockSize - len(src)%blockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(src, padtext...)
 }
 
-// aesEncrypt encrypts content using AES-128-CBC
+// aesEncrypt encrypts content using AES-128-CBC.
 func aesEncrypt(text []byte, key []byte, iv []byte) (string, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -48,7 +49,7 @@ func aesEncrypt(text []byte, key []byte, iv []byte) (string, error) {
 	return base64.StdEncoding.EncodeToString(encrypted), nil
 }
 
-// rsaEncrypt performs plain raw RSA encryption with reversed bytes
+// rsaEncrypt performs plain raw RSA encryption with reversed bytes.
 func rsaEncrypt(text []byte, modulusHex string, exponentHex string) (string, error) {
 	reversed := make([]byte, len(text))
 	for i, b := range text {
@@ -233,19 +234,19 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "invalid profile format"})
 		}
 
-		userIdVal, exists := profileMap["userId"]
+		userIDVal, exists := profileMap["userId"]
 		if !exists {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "userId not found in profile"})
 		}
 
-		userIdFloat, ok := userIdVal.(float64)
+		userIDFloat, ok := userIDVal.(float64)
 		if !ok {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "invalid userId format"})
 		}
-		userId := int64(userIdFloat)
+		userID := int64(userIDFloat)
 
 		// Second call /weapi/user/playlist to get playlists of user
-		playlistPayload := fmt.Sprintf(`{"uid":%d,"limit":1000,"offset":0}`, userId)
+		playlistPayload := fmt.Sprintf(`{"uid":%d,"limit":1000,"offset":0}`, userID)
 		body, _, err := neteasePost("/weapi/user/playlist", playlistPayload, cookie)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
@@ -255,16 +256,16 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 
 	// 4. Get playlist tracks
 	g.GET("/playlist/tracks", func(c *echo.Context) error {
-		playlistId := c.QueryParam("playlist_id")
+		playlistID := c.QueryParam("playlist_id")
 		cookie := c.QueryParam("cookie")
-		if playlistId == "" {
+		if playlistID == "" {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "playlist_id is required"})
 		}
 		if cookie == "" {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "cookie is required"})
 		}
 
-		payload := fmt.Sprintf(`{"id":"%s","n":1000,"s":8}`, playlistId)
+		payload := fmt.Sprintf(`{"id":"%s","n":1000,"s":8}`, playlistID)
 		body, _, err := neteasePost("/weapi/v6/playlist/detail", payload, cookie)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
@@ -274,16 +275,16 @@ func RegisterNeteaseRoutes(router *echo.Group, storeInstance *store.Store, secre
 
 	// 5. Get playable audio URL
 	g.GET("/song/url", func(c *echo.Context) error {
-		songId := c.QueryParam("song_id")
+		songID := c.QueryParam("song_id")
 		cookie := c.QueryParam("cookie")
-		if songId == "" {
+		if songID == "" {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "song_id is required"})
 		}
 		if cookie == "" {
 			return c.JSON(http.StatusBadRequest, map[string]string{"error": "cookie is required"})
 		}
 
-		payload := fmt.Sprintf(`{"ids":"[%s]","level":"standard","encodeType":"mp3"}`, songId)
+		payload := fmt.Sprintf(`{"ids":"[%s]","level":"standard","encodeType":"mp3"}`, songID)
 		body, _, err := neteasePost("/weapi/song/enhance/player/url/v1", payload, cookie)
 		if err != nil {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})

@@ -1,6 +1,6 @@
 import defaultDarkThemeContent from "../themes/default-dark.css?raw";
-import paperThemeContent from "../themes/paper.css?raw";
 import everforestDarkThemeContent from "../themes/everforest-dark.css?raw";
+import paperThemeContent from "../themes/paper.css?raw";
 
 // ============================================================================
 // Types and Constants
