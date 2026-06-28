@@ -26,18 +26,18 @@
   --accent-foreground: oklch(0.485 0.017 142);
 
   /* Destructive (Red - #e6686b) */
-  --destructive: oklch(0.60 0.15 19);
+  --destructive: oklch(0.6 0.15 19);
   --destructive-foreground: oklch(0.98 0.004 255);
 
   /* Feedback - Success (Green - #8da101) and Warning (Yellow - #dfa000) */
   --success: oklch(0.66 0.13 115);
   --success-foreground: oklch(0.967 0.016 84);
-  --warning: oklch(0.70 0.14 75);
+  --warning: oklch(0.7 0.14 75);
   --warning-foreground: oklch(0.967 0.016 84);
 
   /* Borders (#e8e0cc) */
-  --border: oklch(0.90 0.015 84);
-  --input: oklch(0.90 0.015 84);
+  --border: oklch(0.9 0.015 84);
+  --input: oklch(0.9 0.015 84);
   --ring: oklch(0.59 0.11 200);
 
   /* Sidebar (#f8f0dc) */
