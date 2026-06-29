@@ -1,15 +1,24 @@
+import catppuccinThemeContent from "../themes/catppuccin.css?raw";
 import defaultDarkThemeContent from "../themes/default-dark.css?raw";
+import draculaThemeContent from "../themes/dracula.css?raw";
 import everforestDarkThemeContent from "../themes/everforest-dark.css?raw";
 import everforestLightThemeContent from "../themes/everforest-light.css?raw";
 import paperThemeContent from "../themes/paper.css?raw";
-import catppuccinThemeContent from "../themes/catppuccin.css?raw";
-import draculaThemeContent from "../themes/dracula.css?raw";
 
 // ============================================================================
 // Types and Constants
 // ============================================================================
 
-const VALID_THEMES = ["system", "default", "default-dark", "paper", "everforest-dark", "everforest-light", "catppuccin", "dracula"] as const;
+const VALID_THEMES = [
+  "system",
+  "default",
+  "default-dark",
+  "paper",
+  "everforest-dark",
+  "everforest-light",
+  "catppuccin",
+  "dracula",
+] as const;
 
 export type Theme = (typeof VALID_THEMES)[number];
 export type ResolvedTheme = Exclude<Theme, "system">;
