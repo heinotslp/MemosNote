@@ -1,0 +1,47 @@
+name: Build Desktop App - Windows
+on:
+  push:
+    branches: [ main ]
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.2'
+      - name: install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 11.0.1
+
+      # 1. 编译并打包前端
+      - name: Install dependencies and Build frontend
+        run: |
+          cd web
+          pnpm install
+          pnpm release
+          pnpm build
+
+      # 2. 编译 Go 后端边车可执行程序
+      - name: Build Go Sidecar
+        shell: pwsh
+        run: |
+          mkdir src-tauri/bin -Force
+          go build -o src-tauri/bin/memos-backend-x86_64-pc-windows-msvc.exe ./cmd/memos
+      - name: Build Tauri Desktop Client
+        run: |
+          pnpm dlx @tauri-apps/cli@1 build
+      # 3. 将生成物作为 Artifact 保存供您下载
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MemosNote-Windows
+          path: src-tauri/target/release/bundle/**
