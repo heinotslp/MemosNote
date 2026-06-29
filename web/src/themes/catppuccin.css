@@ -1,0 +1,48 @@
+:root {
+  /* Catppuccin Macchiato Theme - Cozy Pastel Dark Theme */
+  --background: oklch(0.279 0.035 276.9); /* #24273a */
+  --foreground: oklch(0.871 0.048 273.7); /* #cad3f5 */
+
+  --card: oklch(0.249 0.03 278.4); /* #1e2030 */
+  --card-foreground: oklch(0.871 0.048 273.7);
+
+  --popover: oklch(0.219 0.025 280.7); /* #181926 */
+  --popover-foreground: oklch(0.812 0.046 274.3);
+
+  /* Primary (Lavender - #b7bdf8) */
+  --primary: oklch(0.814 0.083 279.9);
+  --primary-foreground: oklch(0.279 0.035 276.9);
+
+  /* Secondary (Surface0 - #363a4f) */
+  --secondary: oklch(0.354 0.037 276);
+  --secondary-foreground: oklch(0.871 0.048 273.7);
+
+  /* Muted (Surface1 - #494d64) */
+  --muted: oklch(0.426 0.039 276.9);
+  --muted-foreground: oklch(0.627 0.041 273.7); /* #8087a2 */
+
+  /* Accent (Surface0 - #363a4f) */
+  --accent: oklch(0.354 0.037 276);
+  --accent-foreground: oklch(0.871 0.048 273.7);
+
+  /* Destructive (Red - #ed8796) */
+  --destructive: oklch(0.737 0.125 11.2);
+  --destructive-foreground: oklch(0.279 0.035 276.9);
+
+  /* Feedback - Success (Green - #a6da95) and Warning (Yellow - #eed49f) */
+  --success: oklch(0.835 0.108 138.2);
+  --success-foreground: oklch(0.279 0.035 276.9);
+  --warning: oklch(0.879 0.074 84.8);
+  --warning-foreground: oklch(0.279 0.035 276.9);
+
+  /* Borders (#363a4f) */
+  --border: oklch(0.354 0.037 276);
+  --input: oklch(0.354 0.037 276);
+  --ring: oklch(0.814 0.083 279.9);
+
+  /* Sidebar (#1e2030) */
+  --sidebar: oklch(0.249 0.03 278.4);
+  --sidebar-foreground: oklch(0.871 0.048 273.7);
+  --sidebar-accent: oklch(0.354 0.037 276);
+  --sidebar-accent-foreground: oklch(0.871 0.048 273.7);
+}

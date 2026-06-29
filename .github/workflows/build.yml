@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest] # 我们只编译 Windows，也可以加上 macos-latest, ubuntu-22.04
+        platform: [windows-latest, ubuntu-22.04]
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +26,12 @@ jobs:
         with:
           version: 11.0.1
 
+      - name: install system dependencies (Linux only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+
       # 1. 编译并打包前端
       - name: Install dependencies and Build frontend
         run: |
@@ -39,8 +45,11 @@ jobs:
         shell: pwsh
         run: |
           mkdir src-tauri/bin -Force
-          # 注意：Github Action 运行在 64位 Windows 上，所以 Target 是 x86_64-pc-windows-msvc
-          go build -o src-tauri/bin/memos-backend-x86_64-pc-windows-msvc.exe ./cmd/memos
+          if ("${{ matrix.platform }}" -eq "windows-latest") {
+            go build -o src-tauri/bin/memos-backend-x86_64-pc-windows-msvc.exe ./cmd/memos
+          } else {
+            go build -o src-tauri/bin/memos-backend-x86_64-unknown-linux-gnu ./cmd/memos
+          }
       - name: Build Tauri Desktop Client
         run: |
           pnpm dlx @tauri-apps/cli@1 build
@@ -48,5 +57,5 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MemosNote-Windows
+          name: MemosNote-${{ matrix.platform }}
           path: src-tauri/target/release/bundle/**

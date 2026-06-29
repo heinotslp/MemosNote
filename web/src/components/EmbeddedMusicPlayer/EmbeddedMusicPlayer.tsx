@@ -290,6 +290,8 @@ const EmbeddedMusicPlayer = () => {
 
   // Track URL Resolution Effect
   useEffect(() => {
+    let isCurrent = true;
+
     if (currentTrackIndex < 0 || currentTrackIndex >= playlist.length) {
       setResolvedUrl("");
       setIsPlaying(false);
@@ -300,6 +302,7 @@ const EmbeddedMusicPlayer = () => {
     if (track.isNetease) {
       resolveNeteaseUrl(track.id)
         .then((url) => {
+          if (!isCurrent) return;
           if (url) {
             setResolvedUrl(url);
           } else {
@@ -309,6 +312,7 @@ const EmbeddedMusicPlayer = () => {
           }
         })
         .catch((err) => {
+          if (!isCurrent) return;
           console.error("Failed to resolve NetEase song url", err);
           setResolvedUrl("");
           setIsPlaying(false);
@@ -316,6 +320,10 @@ const EmbeddedMusicPlayer = () => {
     } else {
       setResolvedUrl(track.url || "");
     }
+
+    return () => {
+      isCurrent = false;
+    };
   }, [currentTrackIndex, playlist, neteaseCookie]);
 
   // Volume synchronization
@@ -330,7 +338,11 @@ const EmbeddedMusicPlayer = () => {
       if (isPlaying && resolvedUrl) {
         audioRef.current.play().catch((err) => {
           console.warn("Playback prevented or interrupted", err);
-          setIsPlaying(false);
+          // Only force state to pause if it's an autoplay block (NotAllowedError)
+          // Ignore AbortError which happens naturally when switching tracks rapidly
+          if (err.name === "NotAllowedError") {
+            setIsPlaying(false);
+          }
         });
       } else {
         audioRef.current.pause();

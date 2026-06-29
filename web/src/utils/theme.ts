@@ -2,12 +2,14 @@ import defaultDarkThemeContent from "../themes/default-dark.css?raw";
 import everforestDarkThemeContent from "../themes/everforest-dark.css?raw";
 import everforestLightThemeContent from "../themes/everforest-light.css?raw";
 import paperThemeContent from "../themes/paper.css?raw";
+import catppuccinThemeContent from "../themes/catppuccin.css?raw";
+import draculaThemeContent from "../themes/dracula.css?raw";
 
 // ============================================================================
 // Types and Constants
 // ============================================================================
 
-const VALID_THEMES = ["system", "default", "default-dark", "paper", "everforest-dark", "everforest-light"] as const;
+const VALID_THEMES = ["system", "default", "default-dark", "paper", "everforest-dark", "everforest-light", "catppuccin", "dracula"] as const;
 
 export type Theme = (typeof VALID_THEMES)[number];
 export type ResolvedTheme = Exclude<Theme, "system">;
@@ -26,6 +28,8 @@ const THEME_CONTENT: Record<ResolvedTheme, string | null> = {
   paper: paperThemeContent,
   "everforest-dark": everforestDarkThemeContent,
   "everforest-light": everforestLightThemeContent,
+  catppuccin: catppuccinThemeContent,
+  dracula: draculaThemeContent,
 };
 
 const THEME_COLORS: Record<ResolvedTheme, string> = {
@@ -34,6 +38,8 @@ const THEME_COLORS: Record<ResolvedTheme, string> = {
   paper: "#f5ede4",
   "everforest-dark": "#2b3339",
   "everforest-light": "#fdf6e3",
+  catppuccin: "#24273a",
+  dracula: "#282a36",
 };
 
 export const THEME_OPTIONS: ThemeOption[] = [
@@ -43,6 +49,8 @@ export const THEME_OPTIONS: ThemeOption[] = [
   { value: "paper", label: "Paper" },
   { value: "everforest-dark", label: "Everforest Dark" },
   { value: "everforest-light", label: "Everforest Light" },
+  { value: "catppuccin", label: "Catppuccin Macchiato" },
+  { value: "dracula", label: "Dracula" },
 ];
 
 // ============================================================================
